@@ -12,3 +12,5 @@ To start learning computer vision, you should start by installing:
 - [PyTorch Tutorials](#pytorch-tutorials)
 
 ## PyTorch Tutorials
+### Basics
+* Tensor Basics
