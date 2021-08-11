@@ -1,5 +1,5 @@
 # learn_computer_vision
-A repository created with the purpose of teaching students in BME lab 308A- Hanoi University of Science and Technology. 
+A collection of tutorials and projects created with the purpose of teaching students in BME lab 308A- Hanoi University of Science and Technology. 
 
 ## Getting started 
 
@@ -13,4 +13,4 @@ To start learning computer vision, you should start by installing:
 
 ## PyTorch Tutorials
 ### Basics
-* Tensor Basics
+* [Tensor Basics](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/tensor_basics/pytorch_tensor.py)
