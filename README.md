@@ -1,6 +1,8 @@
 # learn_computer_vision
 An organized collection of tutorials and projects created for aspriring computer vision students.  
 
+<p align="center"><img width="100%" src="logo.png" /></p>
+
 ## Getting started 
 
 To start learning computer vision, you should start by installing: 
