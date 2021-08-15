@@ -11,12 +11,17 @@ To start learning computer vision, you should start by installing:
 - For computers with compatible NVIDIA GPU: Graphics cards drivers, CUDA and CUDNN.
 
 ## Table of contents 
-- [PyTorch Tutorials](#pytorch-tutorials)
+- [PyTorch Tutorials](#PyTorch_Tutorials)
+- [Assignments](#Assignments )
 
-## PyTorch Tutorials
+## PyTorch_Tutorials
 ### Basics
 * [Tensor Basics](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/tensor_basics/pytorch_tensor.py)
 * [Feedforward Neural Net](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/2_feedforward_nn/simple_fully_nn.py)
 * [Convolutional Neural Net](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/3_covolutional_nn/pytorch_simple_cnn.py)
 * [Weight Load/Save](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/4_save_load_weight/pytorch_loadsave.py)
 * [Custom dataset](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/basics/5_custom_dataset)
+
+## Assignments 
+### Pytorch Assignments 
+* [EX 1](https://github.com/GivralNguyen/learn_computer_vision/blob/main/assignments/assignment1)
