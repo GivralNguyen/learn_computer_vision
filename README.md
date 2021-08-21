@@ -21,6 +21,8 @@ To start learning computer vision, you should start by installing:
 * [Convolutional Neural Net](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/3_covolutional_nn/pytorch_simple_cnn.py)
 * [Weight Load/Save](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/4_save_load_weight/pytorch_loadsave.py)
 * [Custom dataset](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/basics/5_custom_dataset)
+* [Finetune / Transfer learning](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/6_transfer_learning/pretrain_finetune.py)
+* [Augmentation using torchvision](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/7_torchvision_agumentation/torchvision_aug.py)
 
 ## Assignments 
 ### Pytorch Assignments 
