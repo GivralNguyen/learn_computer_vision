@@ -26,4 +26,5 @@ To start learning computer vision, you should start by installing:
 
 ## Assignments 
 ### Pytorch Assignments 
-* [EX 1](https://github.com/GivralNguyen/learn_computer_vision/blob/main/assignments/assignment1)
+* [EX 1 - Building VGG-16](https://github.com/GivralNguyen/learn_computer_vision/blob/main/assignments/assignment1)
+* [EX 2 - Training Resnet-50 on CIFAR-10](https://github.com/GivralNguyen/learn_computer_vision/blob/main/assignments/assignment2)
