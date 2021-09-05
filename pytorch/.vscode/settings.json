@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./basics/5_custom_dataset"
+    ]
+}
