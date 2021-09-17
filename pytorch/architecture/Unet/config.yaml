@@ -1,0 +1,23 @@
+hyper_params:
+  LEARNING_RATE: 0.0001
+  BATCH_SIZE : 32
+  NUM_EPOCHS : 3
+device_cfg: 
+  DEVICE : "cuda"
+  NUM_WORKERS : 2
+image:
+  IMAGE_HEIGHT : 160 #1280 originally
+  IMAGE_WIDTH : 240 # 1918 originally
+model:
+  PIN_MEMORY : True
+  LOAD_MODEL : False
+data:
+  TRAIN_IMG_DIR : "train/" 
+  TRAIN_MASK_DIR : "train_masks/"
+  VAL_IMG_DIR : "val_images/"
+  VAL_MASK_DIR : "val_masks/"
+
+
+
+
+
