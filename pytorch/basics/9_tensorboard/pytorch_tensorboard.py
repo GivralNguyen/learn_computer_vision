@@ -1,13 +1,5 @@
 """
 Example code of how to use the TensorBoard in PyTorch.
-This code uses a lot of different functions from TensorBoard
-and tries to have them all in a compact way, it might not be
-super clear exactly what calls does what, for that I recommend
-watching the YouTube video.
-Video explanation: https://youtu.be/RLqsxWaQdHE
-Got any questions leave a comment on youtube :)
-Programmed by Aladdin Persson <aladdin.persson at hotmail dot com>
-*    2020-04-17 Initial coding
 """
 #pytorch 1.4.0
 #pip i
