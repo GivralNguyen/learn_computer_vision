@@ -27,8 +27,10 @@ To start learning computer vision, you should start by installing:
 * [Tensorboard](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/9_tensorboard/pytorch_tensorboard.py)
 ### Architecture
 * [Classification with Resnet](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/architecture/resnet.py) 
-* [Unet Image Segmenation](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/architecture/Unet)
-* [Object Detection with SSD](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/architecture/SSD)
+### Image_Segmentation
+* [Unet Image Segmenation](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/segmentation/Unet)
+### Object_Detection 
+* [Object Detection with SSD](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/object_detection/SSD)
 ## Assignments 
 ### Pytorch Assignments 
 * [EX 1 - Building VGG-16](https://github.com/GivralNguyen/learn_computer_vision/blob/main/assignments/assignment1)
