@@ -81,8 +81,15 @@ print('==> Building model..')
 # model_name = "GhostResnet18" # 
 # net = GhostResNet18()
 
-model_name = "Shufflenetv2_1.5" #  58s187 1.5 0.1 GFLOPs/ 0.19 GFLOPs
-net = ShuffleNetV2(net_size=1.5)
+# model_name = "Shufflenetv2_1.5" #  58s187 1.5 0.1 GFLOPs/ 0.19 GFLOPs
+# net = ShuffleNetV2(net_size=1.5)
+
+
+# model_name = "densenet_cifar" # 1m 50s 0.13 GFLOPs/0.36 GFLOPs
+# net = densenet_cifar()
+
+model_name = "SENet" # 41s621 0.56 GFLOPs/0.65 GFLOPs
+net = SENet18()
 
 # model_name = "EfficientnetV2" # error?
 # net = effnetv2_s()
@@ -91,9 +98,6 @@ net = ShuffleNetV2(net_size=1.5)
 # net = MobileNet()
 
 
-
-# model_name = "densenet_cifar" #0.13 GFLOPs/0.36 GFLOPs
-# net = densenet_cifar()
 
 # model_name = "DPN92" # 2.07 GFLOPs/2.86 GFLOPs
 # net = DPN92()
@@ -139,8 +143,7 @@ net = ShuffleNetV2(net_size=1.5)
 # model_name = "Resnext" #1.42 GFLOPs/1.88 GFLOPs
 # net = ResNeXt29_2x64d()
 
-# model_name = "SENet" #0.56 GFLOPs/0.65 GFLOPs
-# net = SENet18()
+
 
 # model_name = "simplifiedDLA" #/0.92 GFLOPs/1.06
 # net = SimpleDLA()
