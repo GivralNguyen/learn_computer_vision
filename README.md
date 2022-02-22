@@ -26,7 +26,13 @@ To start learning computer vision, you should start by installing:
 * [Albumentation](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/basics/8_albumentations_tutorial)
 * [Tensorboard](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/basics/9_tensorboard/pytorch_tensorboard.py)
 ### Architecture
-* [Classification with Resnet](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/architecture/resnet.py) 
+* [DenseNet](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/densenet_classifier.py) 
+* [DLA](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/simplified_dla_classifier.py) 
+* [GhosNet-Resnet18](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/ghostnet_resnet18_classifier.py) 
+* [EfficientNet](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/efficientnet_classifier.py) 
+* [MobilenetV2](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/mobilenetv2_classifier.py) 
+* [ShufflenetV2](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/shufflenetv2_classifier.py) 
+* [And many others](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/classification/models) 
 ### Image_Segmentation
 * [Unet Image Segmenation](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/segmentation/Unet)
 ### Object_Detection 
