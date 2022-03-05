@@ -125,6 +125,16 @@ def RegNetX_200MF():
     }
     return RegNet(cfg)
 
+def RegNetY_200MF():
+    cfg = {
+        'depths': [1, 1, 4, 7],
+        'widths': [24, 56, 152, 368],
+        'strides': [1, 1, 2, 2],
+        'group_width': 8,
+        'bottleneck_ratio': 1,
+        'se_ratio': 0.25,
+    }
+    return RegNet(cfg)
 
 def RegNetX_400MF():
     cfg = {
@@ -152,7 +162,7 @@ def RegNetY_400MF():
 
 from pthflops import count_ops
 def test():
-    net = RegNetX_200MF()
+    net = RegNetY_200MF()
     print(net)
     x = torch.randn(32, 3, 32, 32)
     count_ops(net,x)

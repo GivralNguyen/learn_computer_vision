@@ -88,8 +88,19 @@ print('==> Building model..')
 # model_name = "densenet_cifar" # 1m 50s 0.13 GFLOPs/0.36 GFLOPs
 # net = densenet_cifar()
 
-model_name = "SENet" # 41s621 0.56 GFLOPs/0.65 GFLOPs
-net = SENet18()
+# model_name = "SENet" # 41s621 0.56 GFLOPs/0.65 GFLOPs
+# net = SENet18()
+
+# model_name = "simplifiedDLA" #/0.92 GFLOPs/1.06
+# net = SimpleDLA()
+
+model_name = "RegnetY-200MF" #0.23 GFLOPs/0.43 GFLOPs
+net = RegNetY_200MF()
+
+
+# model_name = "PnasNet" #0.08 GFLOPs/0.27 GFLOPs
+# net = PNASNetB()
+
 
 # model_name = "EfficientnetV2" # error?
 # net = effnetv2_s()
@@ -97,6 +108,15 @@ net = SENet18()
 # model_name = "MobileNet" #0.05/ 0.10 GFLOPS 
 # net = MobileNet()
 
+# model_name = "MobileNetv2_1.4" # 94.810 1m 23s 0.31 GFLOPs/0.58 GFLOPs (32, 3, 32, 32)
+# net = MobileNetV2(10, alpha = 1.4)
+
+# model_name = "Shufflenetv2_2" #  58s187 1.5 0.1 GFLOPs/ 0.19 GFLOPs
+# net = ShuffleNetV2(net_size=2)
+
+
+# model_name = "Shufflenet_g3_scale1.5" # 0.40 GFLOPs GFLOPs/0.80 GFLOPs GFLOPs
+# net = ShuffleNet(10, g = 3, scale_factor = 1.5)
 
 
 # model_name = "DPN92" # 2.07 GFLOPs/2.86 GFLOPs
@@ -134,19 +154,14 @@ net = SENet18()
 # model_name = "Lenet"  #0.00 GFLOPs xD
 # net = LeNet()
 
-# model_name = "PnasNet" #0.08 GFLOPs/0.27 GFLOPs
-# net = PNASNetB()
 
-# model_name = "Regnet" #0.23 GFLOPs/0.43 GFLOPs
-# net = RegNetX_200MF()
 
 # model_name = "Resnext" #1.42 GFLOPs/1.88 GFLOPs
 # net = ResNeXt29_2x64d()
 
 
 
-# model_name = "simplifiedDLA" #/0.92 GFLOPs/1.06
-# net = SimpleDLA()
+
 
 # model_name = "DLA" #1.04/1.19
 # net = DLA()

@@ -1,117 +1,165 @@
-'''ShuffleNet in PyTorch.
-See the paper "ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices" for more details.
-'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
+
+class idenUnit(nn.Module):
+    def __init__(self, input_channel, g):
+        super(idenUnit, self).__init__()
+
+        # bottle neck channel = input channel / 4, as the paper did
+        neck_channel = int(input_channel / 4)
+
+        # conv layers, GConv - (shuffle) -> DWConv -> Gconv
+        #               bn, relu             bn        bn
+        self.gconv1 = nn.Conv2d(input_channel, neck_channel, groups = g, kernel_size = 1, bias = False)
+        self.bn1 = nn.BatchNorm2d(neck_channel)
+
+        self.dwconv = nn.Conv2d(neck_channel, neck_channel, groups = neck_channel, kernel_size = 3, 
+            padding = 1, bias = False)
+        self.bn = nn.BatchNorm2d(neck_channel)
+
+        self.gconv2 = nn.Conv2d(neck_channel, input_channel, groups = g, kernel_size = 1, bias = False)
+        self.bn2 = nn.BatchNorm2d(input_channel)
+
+        # for channel shuffle operation 
+        self.g, self.n = g, neck_channel/g
+        assert self.n == int(self.n), "wrong shape to shuffle"
 
 
-class ShuffleBlock(nn.Module):
-    def __init__(self, groups):
-        super(ShuffleBlock, self).__init__()
-        self.groups = groups
+    def forward(self, inputs):
+        x = F.relu(self.bn1(self.gconv1(inputs)))
+        
+        # channel shuffle
+        n, c, w, h = x.shape
+        # x = x.view(n, self.g, self.n, w, h)
+        x = x.view(int(n), int(self.g), int(self.n), int(w), int(h))
+        x = x.transpose_(1, 2).contiguous()
+        x = x.view(n, c, w, h)
 
-    def forward(self, x):
-        '''Channel shuffle: [N,C,H,W] -> [N,g,C/g,H,W] -> [N,C/g,g,H,w] -> [N,C,H,W]'''
-        N,C,H,W = x.size()
-        g = self.groups
-        return x.view(N,g,C//g,H,W).permute(0,2,1,3,4).reshape(N,C,H,W)
+        x = self.bn(self.dwconv(x))
+        x = self.bn2(self.gconv2(x))
+
+        return F.relu(x + inputs)
 
 
-class Bottleneck(nn.Module):
-    def __init__(self, in_planes, out_planes, stride, groups):
-        super(Bottleneck, self).__init__()
-        self.stride = stride
+class poolUnit(nn.Module):
+    def __init__(self, input_channel, output_channel, g, first_group = True, downsample = True):
+        super(poolUnit, self).__init__()
+        self.downsample = downsample
 
-        mid_planes = out_planes/4
-        g = 1 if in_planes==24 else groups
-        self.conv1 = nn.Conv2d(int(in_planes), int(mid_planes), kernel_size=1, groups=g, bias=False)
-        self.bn1 = nn.BatchNorm2d(int(mid_planes))
-        self.shuffle1 = ShuffleBlock(groups=g)
-        self.conv2 = nn.Conv2d(int(mid_planes), int(mid_planes), kernel_size=3, stride=stride, padding=1, groups=int(mid_planes), bias=False)
-        self.bn2 = nn.BatchNorm2d(int(mid_planes))
-        self.conv3 = nn.Conv2d(int(mid_planes), int(out_planes), kernel_size=1, groups=groups, bias=False)
-        self.bn3 = nn.BatchNorm2d(int(out_planes))
+        # bottle neck channel = input channel / 4, as the paper did
+        neck_channel = int(output_channel / 4)
 
-        self.shortcut = nn.Sequential()
-        if stride == 2:
-            self.shortcut = nn.Sequential(nn.AvgPool2d(3, stride=2, padding=1))
+        # conv layers, GConv - (shuffle) -> DWConv -> Gconv
+        #              bn,relu              bn        bn
+        if first_group:
+            self.gconv1 = nn.Conv2d(input_channel, neck_channel, groups = g, kernel_size = 1, bias = False)
+        else:
+            self.gconv1 = nn.Conv2d(input_channel, neck_channel, kernel_size = 1, bias = False)
+        
+        self.bn1 = nn.BatchNorm2d(neck_channel)
 
-    def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.shuffle1(out)
-        out = F.relu(self.bn2(self.conv2(out)))
-        out = self.bn3(self.conv3(out))
-        res = self.shortcut(x)
-        out = F.relu(torch.cat([out,res], 1)) if self.stride==2 else F.relu(out+res)
-        return out
+        stride = 2 if downsample else 1
+        self.dwconv = nn.Conv2d(neck_channel, neck_channel, groups = neck_channel, stride = stride, kernel_size = 3, 
+            padding = 1, bias = False)
+        self.bn = nn.BatchNorm2d(neck_channel)
 
+        self.gconv2 = nn.Conv2d(neck_channel, output_channel - input_channel, groups = g, kernel_size = 1, bias = False)
+        self.bn2 = nn.BatchNorm2d(output_channel - input_channel)
+
+        # for channel shuffle operation 
+        self.g, self.n = g, neck_channel/g
+        assert self.n == int(self.n), "error shape to shuffle"
+
+
+    def forward(self, inputs):
+        x = F.relu(self.bn1(self.gconv1(inputs)))
+        
+        # channel shuffle
+        n, c, w, h = x.shape
+        x = x.view(int(n), int(self.g), int(self.n), int(w), int(h))
+        x = x.transpose_(1, 2).contiguous()
+        x = x.view(n, c, w, h)
+
+        x = self.bn(self.dwconv(x))
+        x = self.bn2(self.gconv2(x))
+
+        shortcut = F.avg_pool2d(inputs, 2) if self.downsample else inputs
+        return F.relu(torch.cat((x, shortcut), dim = 1))
 
 class ShuffleNet(nn.Module):
-    def __init__(self, cfg):
+    def __init__(self, output_size, scale_factor = 1, g = 8):
         super(ShuffleNet, self).__init__()
-        out_planes = cfg['out_planes']
-        num_blocks = cfg['num_blocks']
-        groups = cfg['groups']
+        self.g = g
+        # self.cs = {1: 144, 2: 200, 3: 240, 4: 272, 8: 384}
+        self.cs = {1: 144, 2: 200, 3: 240, 4: 272, 8: 384}
 
-        self.conv1 = nn.Conv2d(3, 24, kernel_size=1, bias=False)
+        # compute output channels for stages
+        c2 = self.cs[self.g]
+        c2 = int(scale_factor * c2)
+        c3, c4 = 2*c2, 4*c2
+
+        # first conv layer & last fc layer
+        self.conv1 = nn.Conv2d(3, 24, kernel_size = 3, padding = 1, stride = 1, bias = False)
         self.bn1 = nn.BatchNorm2d(24)
-        self.in_planes = 24
-        self.layer1 = self._make_layer(out_planes[0], num_blocks[0], groups)
-        self.layer2 = self._make_layer(out_planes[1], num_blocks[1], groups)
-        self.layer3 = self._make_layer(out_planes[2], num_blocks[2], groups)
-        self.linear = nn.Linear(out_planes[2], 10)
-        self.classifier = nn.Sequential(
-            nn.Linear(out_planes[2], 512),
-            nn.ReLU(True),
-            nn.Linear(512, 512),
-            nn.ReLU(True),
-            nn.Linear(512, 10)
-        )
+
+        self.fc = nn.Linear(c4, output_size)
+
+        # build stages
+        self.stage2 = self.build_stage(24, c2, repeat_time = 3, first_group = False, downsample = False)
+        self.stage3 = self.build_stage(c2, c3, repeat_time = 7)
+        self.stage4 = self.build_stage(c3, c4, repeat_time = 3)
+
+        # weights init
+        self.weights_init()
 
 
-    def _make_layer(self, out_planes, num_blocks, groups):
-        layers = []
-        for i in range(num_blocks):
-            stride = 2 if i == 0 else 1
-            cat_planes = self.in_planes if i == 0 else 0
-            layers.append(Bottleneck(self.in_planes, out_planes-cat_planes, stride=stride, groups=groups))
-            self.in_planes = out_planes
-        return nn.Sequential(*layers)
+    def build_stage(self, input_channel, output_channel, repeat_time, first_group = True, downsample = True):
+        stage = [poolUnit(input_channel, output_channel, self.g, first_group = first_group, downsample = downsample)]
+        
+        for i in range(repeat_time):
+            stage.append(idenUnit(output_channel, self.g))
 
-    def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.layer1(out)
-        out = self.layer2(out)
-        out = self.layer3(out)
-        out = F.avg_pool2d(out, 4)
-        out = out.view(out.size(0), -1)
-        out = self.linear(out)
-        # out = F.log_softmax(out, dim=1) #new 
-        return out
+        return nn.Sequential(*stage) 
 
 
-def ShuffleNetG2():
-    cfg = {
-        'out_planes': [200,400,800],
-        'num_blocks': [4,8,4],
-        'groups': 2
-    }
-    return ShuffleNet(cfg)
 
-def ShuffleNetG3():
-    cfg = {
-        'out_planes': [240,480,960],
-        'num_blocks': [4,8,4],
-        'groups': 3
-    }
-    return ShuffleNet(cfg)
+    def weights_init(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. / n))
 
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
+
+
+    def forward(self, inputs):
+
+        # first conv layer
+        x = F.relu(self.bn1(self.conv1(inputs)))
+        # x = F.max_pool2d(x, kernel_size = 3, stride = 2, padding = 1)
+        # assert x.shape[1:] == torch.Size([24,56,56])
+
+        # bottlenecks
+        x = self.stage2(x)
+        x = self.stage3(x)
+        x = self.stage4(x)
+        # print(x.shape)
+
+        # global pooling and fc (in place of conv 1x1 in paper)
+        x = F.adaptive_avg_pool2d(x, 1)
+        x = x.view(x.shape[0], -1)
+        x = self.fc(x)
+
+        return x
 
 from pthflops import count_ops
 def test():
-    net = ShuffleNetG2()
-    x = torch.randn(32,3,32,32)
+    net = ShuffleNet(10, g = 1, scale_factor = 1.5)
+    x = torch.randn(1,3,32,32)
     count_ops(net,x)
     y = net(x)
     print(y.size())
