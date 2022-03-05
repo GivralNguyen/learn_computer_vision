@@ -33,6 +33,7 @@ To start learning computer vision, you should start by installing:
 * [MobilenetV2](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/mobilenetv2_classifier.py) 
 * [ShufflenetV2](https://github.com/GivralNguyen/learn_computer_vision/blob/main/pytorch/classification/models/shufflenetv2_classifier.py) 
 * [And many others](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/classification/models) 
+* Please use tensorboard to view the runs [here](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/classification/runs/CIFAR) 
 ### Image_Segmentation
 * [Unet Image Segmenation](https://github.com/GivralNguyen/learn_computer_vision/tree/main/pytorch/segmentation/Unet)
 ### Object_Detection 
